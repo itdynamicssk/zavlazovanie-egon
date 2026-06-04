@@ -1,30 +1,30 @@
-name: Deploy na WebGlobe (FTP)
+name: Deploy na WebGlobe SFTP
 
-# Pri každom push do vetvy main sa web automaticky nahrá na FTP hosting.
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:   # umožní spustiť deploy aj manuálne z karty Actions
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Stiahnuť kód
         uses: actions/checkout@v4
 
-      - name: Nahrať na FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server:   ${{ secrets.FTP_SERVER }}     # napr. ftp.tvojadomena.sk
-          username: ${{ secrets.FTP_USERNAME }}    # FTP používateľ z WebGlobe
-          password: ${{ secrets.FTP_PASSWORD }}    # FTP heslo z WebGlobe
-          protocol: ftps                            # WebGlobe podporuje FTPS (šifrované)
-          server-dir: ./public_html/                        # cieľový priečinok na hostingu (over vo WebGlobe: /www/ alebo /sub/...)
-          # súbory, ktoré sa NEnahrajú na hosting:
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.github/**
-            **/*.md
-            README*
+      - name: Nahrať na WebGlobe cez SFTP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+          lftp -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
+          set sftp:auto-confirm yes
+          mirror -R --verbose \
+            --exclude-glob .git* \
+            --exclude-glob .github/ \
+            --exclude-glob README* \
+            --exclude-glob *.md \
+            ./ ./public_html/
+          bye
+          EOF
