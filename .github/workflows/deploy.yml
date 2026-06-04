@@ -13,18 +13,36 @@ jobs:
       - name: Stiahnuť kód
         uses: actions/checkout@v4
 
-      - name: Nahrať na WebGlobe cez SFTP
+      - name: Nahrať web na WebGlobe cez SFTP
         run: |
           sudo apt-get update
           sudo apt-get install -y lftp
 
           lftp -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
+          set cmd:fail-exit yes
+          set net:timeout 20
+          set net:max-retries 2
           set sftp:auto-confirm yes
-          mirror -R --verbose \
-            --exclude-glob .git* \
+          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+          mirror -R --verbose --only-newer --parallel=4 \
+            --exclude-glob .git/ \
+            --exclude-glob .git/** \
             --exclude-glob .github/ \
+            --exclude-glob .github/** \
+            --exclude-glob node_modules/ \
+            --exclude-glob node_modules/** \
+            --exclude-glob backup/ \
+            --exclude-glob backup/** \
+            --exclude-glob DB_BACKUP/ \
+            --exclude-glob DB_BACKUP/** \
+            --exclude-glob logs/ \
+            --exclude-glob logs/** \
+            --exclude-glob tmp/ \
+            --exclude-glob tmp/** \
             --exclude-glob README* \
             --exclude-glob *.md \
             ./ ./public_html/
+
           bye
           EOF
