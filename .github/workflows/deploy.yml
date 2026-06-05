@@ -19,20 +19,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y lftp
 
-      - name: Nahrať web do webrootu
+      - name: Nahrať web do public_html
         run: |
-          lftp -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<'EOF'
+          lftp -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
           set cmd:fail-exit yes
-          set net:timeout 60
-          set net:max-retries 5
-          set net:reconnect-interval-base 8
-          set net:reconnect-interval-multiplier 1
-          set net:persist-retries 5
+          set net:timeout 30
+          set net:max-retries 2
           set xfer:timeout 90
           set sftp:auto-confirm yes
-          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=15"
+          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
 
-          mirror -R --verbose --only-newer --parallel=1 \
+          mirror -R --verbose --only-newer --parallel=2 \
             --exclude-glob .git/ \
             --exclude-glob .git/** \
             --exclude-glob .github/ \
