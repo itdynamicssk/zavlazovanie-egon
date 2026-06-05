@@ -19,36 +19,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y lftp
 
-      # Test pripojenia je len informatívny — nesmie zhodiť deploy,
-      # preto continue-on-error: true (predtým flaknutý test zhodil celý beh).
-      - name: Otestovať SFTP pripojenie (informatívne)
-        continue-on-error: true
+      - name: Nahrať web do webrootu
         run: |
-          lftp -d -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
-          set net:timeout 60
-          set net:max-retries 5
-          set net:reconnect-interval-base 8
-          set net:reconnect-interval-multiplier 1
-          set sftp:auto-confirm yes
-          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=15"
-          pwd
-          ls
-          bye
-          EOF
-
-      - name: Nahrať web do public_html
-        run: |
-          lftp -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
+          lftp -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<'EOF'
           set cmd:fail-exit yes
           set net:timeout 60
           set net:max-retries 5
           set net:reconnect-interval-base 8
           set net:reconnect-interval-multiplier 1
           set net:persist-retries 5
+          set xfer:timeout 90
           set sftp:auto-confirm yes
           set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=15"
 
-          mirror -R --verbose --only-newer --parallel=2 \
+          mirror -R --verbose --only-newer --parallel=1 \
             --exclude-glob .git/ \
             --exclude-glob .git/** \
             --exclude-glob .github/ \
@@ -65,6 +49,8 @@ jobs:
             --exclude-glob node_modules/** \
             --exclude-glob screenshots/ \
             --exclude-glob screenshots/** \
+            --exclude-glob uploads/ \
+            --exclude-glob uploads/** \
             --exclude-glob README* \
             --exclude-glob *.md \
             ./ ./public_html/

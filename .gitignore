@@ -1,0 +1,10 @@
+# Pracovné a zdrojové súbory — nepatria do repa ani na web
+uploads/
+screenshots/
+backup/
+DB_BACKUP/
+logs/
+tmp/
+node_modules/
+.DS_Store
+Thumbs.db
