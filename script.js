@@ -188,45 +188,51 @@
     }));
   }
 
-  /* ---------- Google Tag Manager / GA4 (consent-gated) ---------- */
-  var GTM_ID = "GTM-5WVP5NC";
-  var gtmLoaded = false;
-  function loadAnalytics() {
-    if (gtmLoaded) return;
-    gtmLoaded = true;
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-    var s = document.createElement("script");
-    s.async = true;
-    s.src = "https://www.googletagmanager.com/gtm.js?id=" + GTM_ID;
-    document.head.appendChild(s);
-  }
-
-  /* ---------- Cookie consent ---------- */
+  /* ---------- Cookie consent (Google Consent Mode v2) ---------- */
   (function cookies() {
-    const KEY = "egon_cookie_consent";
+    const KEY = "cookie_consent"; // hodnoty: "all" | "essential"
     const banner = document.getElementById("cookie");
-    function readConsent() { try { return JSON.parse(localStorage.getItem(KEY)); } catch (e) { return null; } }
-    function save(val) { localStorage.setItem(KEY, JSON.stringify(Object.assign({ ts: Date.now(), necessary: true }, val))); }
 
-    // load analytics on revisit if previously consented (independent of banner DOM)
-    const prev = readConsent();
-    if (prev && prev.analytics) loadAnalytics();
+    function gtagFn() { window.dataLayer = window.dataLayer || []; window.dataLayer.push(arguments); }
+
+    function updateGCM(type, isInitialLoad) {
+      const granted = type === "all";
+      gtagFn("consent", "update", {
+        "ad_storage": granted ? "granted" : "denied",
+        "ad_user_data": granted ? "granted" : "denied",
+        "ad_personalization": granted ? "granted" : "denied",
+        "analytics_storage": granted ? "granted" : "denied"
+      });
+      // vlastný event len pri manuálnom súhlase (nie pri načítaní) — aby sa v GTM nezdvojil
+      if (granted && !isInitialLoad) {
+        window.dataLayer.push({ event: "consent_updated", timestamp: Date.now() });
+      }
+    }
+
+    // pri opätovnej návšteve aplikuj uložený súhlas hneď
+    const stored = localStorage.getItem(KEY);
+    if (stored === "all" || stored === "essential") updateGCM(stored, true);
 
     if (!banner) return;
     function show() { banner.classList.add("show"); }
     function hide() { banner.classList.remove("show"); }
 
+    function accept(type) {
+      localStorage.setItem(KEY, type);
+      updateGCM(type, false);
+      hide();
+    }
+
     const params = new URLSearchParams(location.search);
-    if (!localStorage.getItem(KEY)) setTimeout(show, 900);
+    if (!stored) setTimeout(show, 900);
     if (params.get("cookies") === "open") setTimeout(show, 350);
 
     document.addEventListener("click", (e) => {
       const t = e.target.closest("[data-cookie]");
       if (!t) return;
       const act = t.getAttribute("data-cookie");
-      if (act === "accept") { save({ analytics: true, marketing: true }); loadAnalytics(); hide(); }
-      else if (act === "reject") { save({ analytics: false, marketing: false }); hide(); }
+      if (act === "accept") accept("all");
+      else if (act === "reject") accept("essential");
       else if (act === "open") { e.preventDefault(); show(); }
     });
   })();

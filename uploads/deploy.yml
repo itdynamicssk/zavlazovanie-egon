@@ -1,0 +1,65 @@
+name: Deploy na WebGlobe SFTP
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Stiahnuť kód z GitHubu
+        uses: actions/checkout@v4
+
+      - name: Nainštalovať lftp
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Otestovať SFTP pripojenie
+        run: |
+          lftp -d -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
+          set cmd:fail-exit yes
+          set net:timeout 20
+          set net:max-retries 1
+          set sftp:auto-confirm yes
+          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          pwd
+          ls
+          ls public_html
+          bye
+          EOF
+
+      - name: Nahrať web do public_html
+        run: |
+          lftp -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
+          set cmd:fail-exit yes
+          set net:timeout 30
+          set net:max-retries 2
+          set sftp:auto-confirm yes
+          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+          mirror -R --verbose --only-newer --parallel=2 \
+            --exclude-glob .git/ \
+            --exclude-glob .git/** \
+            --exclude-glob .github/ \
+            --exclude-glob .github/** \
+            --exclude-glob backup/ \
+            --exclude-glob backup/** \
+            --exclude-glob DB_BACKUP/ \
+            --exclude-glob DB_BACKUP/** \
+            --exclude-glob logs/ \
+            --exclude-glob logs/** \
+            --exclude-glob tmp/ \
+            --exclude-glob tmp/** \
+            --exclude-glob node_modules/ \
+            --exclude-glob node_modules/** \
+            --exclude-glob README* \
+            --exclude-glob *.md \
+            ./ ./public_html/
+
+          bye
+          EOF
