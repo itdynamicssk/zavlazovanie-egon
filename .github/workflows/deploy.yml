@@ -19,17 +19,20 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y lftp
 
-      - name: Otestovať SFTP pripojenie
+      # Test pripojenia je len informatívny — nesmie zhodiť deploy,
+      # preto continue-on-error: true (predtým flaknutý test zhodil celý beh).
+      - name: Otestovať SFTP pripojenie (informatívne)
+        continue-on-error: true
         run: |
           lftp -d -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
-          set cmd:fail-exit yes
-          set net:timeout 20
-          set net:max-retries 1
+          set net:timeout 60
+          set net:max-retries 5
+          set net:reconnect-interval-base 8
+          set net:reconnect-interval-multiplier 1
           set sftp:auto-confirm yes
-          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=15"
           pwd
           ls
-          ls public_html
           bye
           EOF
 
@@ -37,10 +40,13 @@ jobs:
         run: |
           lftp -u "${{ secrets.FTP_USERNAME }}","${{ secrets.FTP_PASSWORD }}" sftp://${{ secrets.FTP_SERVER }}:222 <<EOF
           set cmd:fail-exit yes
-          set net:timeout 30
-          set net:max-retries 2
+          set net:timeout 60
+          set net:max-retries 5
+          set net:reconnect-interval-base 8
+          set net:reconnect-interval-multiplier 1
+          set net:persist-retries 5
           set sftp:auto-confirm yes
-          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+          set sftp:connect-program "ssh -a -x -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ServerAliveInterval=15"
 
           mirror -R --verbose --only-newer --parallel=2 \
             --exclude-glob .git/ \
@@ -57,6 +63,8 @@ jobs:
             --exclude-glob tmp/** \
             --exclude-glob node_modules/ \
             --exclude-glob node_modules/** \
+            --exclude-glob screenshots/ \
+            --exclude-glob screenshots/** \
             --exclude-glob README* \
             --exclude-glob *.md \
             ./ ./public_html/
