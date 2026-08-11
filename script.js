@@ -47,12 +47,26 @@
       try { v.pause(); } catch (e) {}
       return;
     }
-    v.setAttribute("preload", "auto");
+    // šetrenie dát: na pomalom/úspornom pripojení video vôbec nesťahujeme
+    const conn = navigator.connection;
+    if (conn && (conn.saveData || /^([23]g|slow-2g)$/.test(conn.effectiveType || ""))) return;
+
     const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
-    v.addEventListener("canplay", tryPlay);
-    try { v.load(); } catch (e) {}
-    tryPlay();
-    document.addEventListener("visibilitychange", () => { if (!document.hidden) tryPlay(); });
+    // video sa načíta až po dokončení načítania stránky — nesúťaží s LCP obrázkom
+    let started = false;
+    const startVideo = () => {
+      if (started) return;
+      started = true;
+      v.setAttribute("preload", "auto");
+      v.addEventListener("canplay", tryPlay);
+      try { v.load(); } catch (e) {}
+      tryPlay();
+      document.addEventListener("visibilitychange", () => { if (!document.hidden) tryPlay(); });
+    };
+    // malé oneskorenie po `load` – prehliadač najprv dokončí obrázky a vykreslenie
+    const schedule = () => window.setTimeout(startVideo, 400);
+    if (document.readyState === "complete") schedule();
+    else window.addEventListener("load", schedule, { once: true });
   })();
 
   /* ---------- IntersectionObserver: reveals ---------- */

@@ -52,11 +52,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta property="og:description" content="Návrh a realizácia automatických závlahových systémov pre trávniky, záhrady, firemné areály a športové ihriská. Prešov a okolie." />
 <meta property="og:url" content="https://zavlazovanie-egon.sk/" />
 <meta property="og:locale" content="sk_SK" />
-<meta property="og:image" content="https://zavlazovanie-egon.sk/assets/hero-ihrisko-vecer.png" />
+<meta property="og:image" content="https://zavlazovanie-egon.sk/assets/hero-ihrisko-vecer.jpg" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Automatické závlahové systémy | EGON Prešov" />
 <meta name="twitter:description" content="Výsuvné postrekovače, kvapková závlaha a servis pre záhrady, trávniky a ihriská. Prešov a okolie." />
-<meta name="twitter:image" content="https://zavlazovanie-egon.sk/assets/hero-ihrisko-vecer.png" />
+<meta name="twitter:image" content="https://zavlazovanie-egon.sk/assets/hero-ihrisko-vecer.jpg" />
 
 <!-- Local business structured data -->
 <script type="application/ld+json">
@@ -68,7 +68,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   "url": "https://zavlazovanie-egon.sk/",
   "telephone": "+421905829555",
   "email": "info@zavlazovanie-egon.sk",
-  "image": "https://zavlazovanie-egon.sk/assets/hero-ihrisko-vecer.png",
+  "image": "https://zavlazovanie-egon.sk/assets/hero-ihrisko-vecer.jpg",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "Lomnická 26",
@@ -105,7 +105,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+<!-- Písma: len reálne používané rodiny a rezy (Archivo, Hanken Grotesk, Space Mono),
+     načítané neblokujúco — nezdržujú prvé vykreslenie stránky. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Hanken+Grotesk:wght@400;600;700&family=Space+Mono:wght@400&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Hanken+Grotesk:wght@400;600;700&family=Space+Mono:wght@400&display=swap" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Hanken+Grotesk:wght@400;600;700&family=Space+Mono:wght@400&display=swap" /></noscript>
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -119,7 +123,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- ============ NAV ============ -->
 <header class="nav" id="nav">
   <a href="#top" class="nav__logo" aria-label="EGON, domov">
-    <img src="assets/egon-logo-clean.png" alt="EGON" class="nav__logoimg" />
+    <img src="assets/egon-logo-clean.png" alt="EGON" class="nav__logoimg" width="341" height="120" fetchpriority="high" />
   </a>
   <nav class="nav__links">
     <a href="#sluzby">Služby</a>
@@ -146,8 +150,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <main id="top">
 <section class="hero" data-screen-label="Hero">
   <div class="hero__video-wrap">
-    <div class="hero__photo-fallback" style="background-image:url('assets/hero-ihrisko-vecer.png')"></div>
-    <video class="hero__video" id="heroVideo" muted loop playsinline preload="none" poster="assets/hero-ihrisko-vecer.png">
+    <picture class="hero__photo-fallback">
+      <source type="image/avif" srcset="assets/hero-ihrisko-vecer-640.avif 640w, assets/hero-ihrisko-vecer-960.avif 960w, assets/hero-ihrisko-vecer-1280.avif 1280w, assets/hero-ihrisko-vecer-1672.avif 1672w" sizes="100vw" />
+      <source type="image/webp" srcset="assets/hero-ihrisko-vecer-640.webp 640w, assets/hero-ihrisko-vecer-960.webp 960w, assets/hero-ihrisko-vecer-1280.webp 1280w, assets/hero-ihrisko-vecer-1672.webp 1672w" sizes="100vw" />
+      <img src="assets/hero-ihrisko-vecer.jpg" alt="" width="1672" height="941" fetchpriority="high" decoding="async" />
+    </picture>
+    <video class="hero__video" id="heroVideo" muted loop playsinline preload="none">
       <source src="assets/hero-video.mp4" type="video/mp4" />
     </video>
   </div>
@@ -193,7 +201,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <article class="svc reveal">
         <span class="svc__bar"></span>
-        <div class="svc__media"><img src="assets/hero-dom-travnik.png" alt="Závlaha trávnika a záhrady rodinného domu" loading="lazy" /></div>
+        <div class="svc__media"><picture>
+          <source type="image/avif" srcset="assets/hero-dom-travnik-420.avif 420w, assets/hero-dom-travnik-780.avif 780w, assets/hero-dom-travnik-1160.avif 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <source type="image/webp" srcset="assets/hero-dom-travnik-420.webp 420w, assets/hero-dom-travnik-780.webp 780w, assets/hero-dom-travnik-1160.webp 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <img src="assets/hero-dom-travnik.jpg" alt="Závlaha trávnika a záhrady rodinného domu" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture></div>
         <div class="svc__body">
           <span class="svc__no">S/01</span>
           <h3 class="h3">Záhrady domov</h3>
@@ -203,7 +215,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <article class="svc reveal d1">
         <span class="svc__bar"></span>
-        <div class="svc__media"><img src="assets/hero-zahrada-letecky.png" alt="Závlaha firemného areálu a verejnej zelene" loading="lazy" /></div>
+        <div class="svc__media"><picture>
+          <source type="image/avif" srcset="assets/hero-zahrada-letecky-420.avif 420w, assets/hero-zahrada-letecky-780.avif 780w, assets/hero-zahrada-letecky-1160.avif 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <source type="image/webp" srcset="assets/hero-zahrada-letecky-420.webp 420w, assets/hero-zahrada-letecky-780.webp 780w, assets/hero-zahrada-letecky-1160.webp 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <img src="assets/hero-zahrada-letecky.jpg" alt="Závlaha firemného areálu a verejnej zelene" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture></div>
         <div class="svc__body">
           <span class="svc__no">S/02</span>
           <h3 class="h3">Firemné areály</h3>
@@ -213,7 +229,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <article class="svc reveal d2">
         <span class="svc__bar"></span>
-        <div class="svc__media"><img src="assets/ihrisko-sport.png" alt="Závlaha športového trávnika a futbalového ihriska" loading="lazy" /></div>
+        <div class="svc__media"><picture>
+          <source type="image/avif" srcset="assets/ihrisko-sport-420.avif 420w, assets/ihrisko-sport-780.avif 780w, assets/ihrisko-sport-1160.avif 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <source type="image/webp" srcset="assets/ihrisko-sport-420.webp 420w, assets/ihrisko-sport-780.webp 780w, assets/ihrisko-sport-1160.webp 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <img src="assets/ihrisko-sport.jpg" alt="Závlaha športového trávnika a futbalového ihriska" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture></div>
         <div class="svc__body">
           <span class="svc__no">S/03</span>
           <h3 class="h3">Športové ihriská</h3>
@@ -223,7 +243,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <article class="svc reveal d3">
         <span class="svc__bar"></span>
-        <div class="svc__media"><img src="assets/kvapkova-zavlaha.png" alt="Kvapková závlaha okrasných záhonov" loading="lazy" /></div>
+        <div class="svc__media"><picture>
+          <source type="image/avif" srcset="assets/kvapkova-zavlaha-420.avif 420w, assets/kvapkova-zavlaha-780.avif 780w, assets/kvapkova-zavlaha-1160.avif 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <source type="image/webp" srcset="assets/kvapkova-zavlaha-420.webp 420w, assets/kvapkova-zavlaha-780.webp 780w, assets/kvapkova-zavlaha-1160.webp 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <img src="assets/kvapkova-zavlaha.jpg" alt="Kvapková závlaha okrasných záhonov" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture></div>
         <div class="svc__body">
           <span class="svc__no">S/04</span>
           <h3 class="h3">Kvapková závlaha</h3>
@@ -233,7 +257,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <article class="svc reveal">
         <span class="svc__bar"></span>
-        <div class="svc__media"><img src="assets/riadiaca-jednotka.png" alt="Inteligentná riadiaca jednotka so senzormi" loading="lazy" /></div>
+        <div class="svc__media"><picture>
+          <source type="image/avif" srcset="assets/riadiaca-jednotka-420.avif 420w, assets/riadiaca-jednotka-780.avif 780w, assets/riadiaca-jednotka-1160.avif 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <source type="image/webp" srcset="assets/riadiaca-jednotka-420.webp 420w, assets/riadiaca-jednotka-780.webp 780w, assets/riadiaca-jednotka-1160.webp 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <img src="assets/riadiaca-jednotka.jpg" alt="Inteligentná riadiaca jednotka so senzormi" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture></div>
         <div class="svc__body">
           <span class="svc__no">S/05</span>
           <h3 class="h3">Riadiace jednotky</h3>
@@ -243,7 +271,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
       <article class="svc reveal d1">
         <span class="svc__bar"></span>
-        <div class="svc__media"><img src="assets/servis-sekcie.png" alt="Servis a sezónna kontrola závlahového systému" loading="lazy" /></div>
+        <div class="svc__media"><picture>
+          <source type="image/avif" srcset="assets/servis-sekcie-420.avif 420w, assets/servis-sekcie-780.avif 780w, assets/servis-sekcie-1160.avif 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <source type="image/webp" srcset="assets/servis-sekcie-420.webp 420w, assets/servis-sekcie-780.webp 780w, assets/servis-sekcie-1160.webp 1160w" sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw" />
+          <img src="assets/servis-sekcie.jpg" alt="Servis a sezónna kontrola závlahového systému" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture></div>
         <div class="svc__body">
           <span class="svc__no">S/06</span>
           <h3 class="h3">Servis &amp; zazimovanie</h3>
@@ -260,10 +292,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <div class="wrap brands__in reveal">
     <p class="brands__label">PRACUJEME LEN S OVERENÝMI ZNAČKAMI</p>
     <ul class="brands__row">
-      <li><img src="assets/brands/hunter.png" alt="Hunter" loading="lazy" /></li>
-      <li><img src="assets/brands/irritrol.png" alt="Irritrol Systems" loading="lazy" /></li>
-      <li><img src="assets/brands/toro.png" alt="Toro" loading="lazy" /></li>
-      <li><img src="assets/brands/rainbird.png" alt="Rain Bird" loading="lazy" /></li>
+      <li><img src="assets/brands/hunter.png" alt="Hunter" width="563" height="128" loading="lazy" decoding="async" /></li>
+      <li><img src="assets/brands/irritrol.png" alt="Irritrol Systems" width="344" height="128" loading="lazy" decoding="async" /></li>
+      <li><img src="assets/brands/toro.png" alt="Toro" width="180" height="180" loading="lazy" decoding="async" /></li>
+      <li><img src="assets/brands/rainbird.png" alt="Rain Bird" width="662" height="128" loading="lazy" decoding="async" /></li>
     </ul>
   </div>
 </section>
@@ -359,12 +391,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       <p class="lead" style="margin-top:18px; max-width:48ch">Závlahové systémy sme realizovali pre firemné areály, hotely aj verejné inštitúcie na východnom Slovensku.</p>
     </div>
     <ul class="logo-wall reveal">
-      <li><img src="assets/refs/mcdonalds.png" alt="McDonald's" loading="lazy" /></li>
-      <li><img src="assets/refs/elcom.png" alt="Elcom" loading="lazy" /></li>
-      <li><img src="assets/refs/glunz-jensen.svg" alt="Glunz &amp; Jensen" loading="lazy" /></li>
-      <li class="is-square"><img src="assets/refs/kunsthalle.jpg" alt="Kunsthalle Košice" loading="lazy" /></li>
-      <li class="is-square"><img src="assets/refs/uvlf.png" alt="Univerzita veterinárskeho lekárstva v Košiciach" loading="lazy" /></li>
-      <li><img src="assets/refs/hotel-domasa.png" alt="Garden Hotel Domaša" loading="lazy" /></li>
+      <li><img src="assets/refs/mcdonalds.png" alt="McDonald's" width="197" height="140" loading="lazy" decoding="async" /></li>
+      <li><img src="assets/refs/elcom.png" alt="Elcom" width="360" height="140" loading="lazy" decoding="async" /></li>
+      <li><img src="assets/refs/glunz-jensen.svg" alt="Glunz &amp; Jensen" width="981" height="291" loading="lazy" decoding="async" /></li>
+      <li class="is-square"><img src="assets/refs/kunsthalle.jpg" alt="Kunsthalle Košice" width="200" height="200" loading="lazy" decoding="async" /></li>
+      <li class="is-square"><img src="assets/refs/uvlf.png" alt="Univerzita veterinárskeho lekárstva v Košiciach" width="200" height="198" loading="lazy" decoding="async" /></li>
+      <li><img src="assets/refs/hotel-domasa.png" alt="Garden Hotel Domaša" width="480" height="135" loading="lazy" decoding="async" /></li>
     </ul>
   </div>
 </section>
@@ -374,7 +406,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   <div class="wrap">
     <div class="showcase__grid">
       <div class="showcase__stage reveal reveal--l">
-        <div class="showcase__photo" style="background-image:url('assets/postrekovac-detail.png')"></div>
+        <div class="showcase__photo"><picture>
+          <source type="image/avif" srcset="assets/postrekovac-detail-420.avif 420w, assets/postrekovac-detail-780.avif 780w, assets/postrekovac-detail-1160.avif 1160w" sizes="(max-width: 900px) 100vw, 52vw" />
+          <source type="image/webp" srcset="assets/postrekovac-detail-420.webp 420w, assets/postrekovac-detail-780.webp 780w, assets/postrekovac-detail-1160.webp 1160w" sizes="(max-width: 900px) 100vw, 52vw" />
+          <img src="assets/postrekovac-detail.jpg" alt="Detail výsuvného postrekovača v trávniku" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture></div>
         <span class="showcase__chip">Výsuvný postrekovač · detail</span>
       </div>
       <div class="reveal reveal--r d1">
@@ -399,23 +435,43 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     </div>
     <div class="gallery__grid">
       <figure class="shot shot--lg reveal">
-        <img class="shot__img" src="assets/riadiaca-jednotka.png" alt="Inteligentná riadiaca jednotka so senzormi" loading="lazy" />
+        <picture>
+          <source type="image/avif" srcset="assets/riadiaca-jednotka-420.avif 420w, assets/riadiaca-jednotka-780.avif 780w, assets/riadiaca-jednotka-1160.avif 1160w" sizes="(max-width: 760px) 100vw, 58vw" />
+          <source type="image/webp" srcset="assets/riadiaca-jednotka-420.webp 420w, assets/riadiaca-jednotka-780.webp 780w, assets/riadiaca-jednotka-1160.webp 1160w" sizes="(max-width: 760px) 100vw, 58vw" />
+          <img class="shot__img" src="assets/riadiaca-jednotka.jpg" alt="Inteligentná riadiaca jednotka so senzormi" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture>
         <figcaption>Inteligentná riadiaca jednotka so senzormi</figcaption>
       </figure>
       <figure class="shot shot--sm reveal d1">
-        <img class="shot__img" src="assets/kvapkova-zavlaha.png" alt="Kvapková závlaha okrasných záhonov" loading="lazy" />
+        <picture>
+          <source type="image/avif" srcset="assets/kvapkova-zavlaha-420.avif 420w, assets/kvapkova-zavlaha-780.avif 780w, assets/kvapkova-zavlaha-1160.avif 1160w" sizes="(max-width: 760px) 100vw, 42vw" />
+          <source type="image/webp" srcset="assets/kvapkova-zavlaha-420.webp 420w, assets/kvapkova-zavlaha-780.webp 780w, assets/kvapkova-zavlaha-1160.webp 1160w" sizes="(max-width: 760px) 100vw, 42vw" />
+          <img class="shot__img" src="assets/kvapkova-zavlaha.jpg" alt="Kvapková závlaha okrasných záhonov" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture>
         <figcaption>Kvapková závlaha okrasných záhonov</figcaption>
       </figure>
       <figure class="shot shot--w reveal">
-        <img class="shot__img" src="assets/ihrisko-sport.png" alt="Závlaha športového trávnika" loading="lazy" />
+        <picture>
+          <source type="image/avif" srcset="assets/ihrisko-sport-420.avif 420w, assets/ihrisko-sport-780.avif 780w, assets/ihrisko-sport-1160.avif 1160w, assets/ihrisko-sport-1448.avif 1448w" sizes="100vw" />
+          <source type="image/webp" srcset="assets/ihrisko-sport-420.webp 420w, assets/ihrisko-sport-780.webp 780w, assets/ihrisko-sport-1160.webp 1160w, assets/ihrisko-sport-1448.webp 1448w" sizes="100vw" />
+          <img class="shot__img" src="assets/ihrisko-sport.jpg" alt="Závlaha športového trávnika" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture>
         <figcaption>Závlaha športového trávnika</figcaption>
       </figure>
       <figure class="shot shot--sm reveal">
-        <img class="shot__img" src="assets/realizacia-potrubie.png" alt="Realizácia: pokládka rozvodov" loading="lazy" />
+        <picture>
+          <source type="image/avif" srcset="assets/realizacia-potrubie-420.avif 420w, assets/realizacia-potrubie-780.avif 780w, assets/realizacia-potrubie-1160.avif 1160w" sizes="(max-width: 760px) 100vw, 42vw" />
+          <source type="image/webp" srcset="assets/realizacia-potrubie-420.webp 420w, assets/realizacia-potrubie-780.webp 780w, assets/realizacia-potrubie-1160.webp 1160w" sizes="(max-width: 760px) 100vw, 42vw" />
+          <img class="shot__img" src="assets/realizacia-potrubie.jpg" alt="Realizácia: pokládka rozvodov" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture>
         <figcaption>Realizácia: pokládka rozvodov</figcaption>
       </figure>
       <figure class="shot shot--lg reveal d1">
-        <img class="shot__img" src="assets/servis-sekcie.png" alt="Servis a sezónna kontrola sekcií" loading="lazy" />
+        <picture>
+          <source type="image/avif" srcset="assets/servis-sekcie-420.avif 420w, assets/servis-sekcie-780.avif 780w, assets/servis-sekcie-1160.avif 1160w" sizes="(max-width: 760px) 100vw, 58vw" />
+          <source type="image/webp" srcset="assets/servis-sekcie-420.webp 420w, assets/servis-sekcie-780.webp 780w, assets/servis-sekcie-1160.webp 1160w" sizes="(max-width: 760px) 100vw, 58vw" />
+          <img class="shot__img" src="assets/servis-sekcie.jpg" alt="Servis a sezónna kontrola sekcií" width="1448" height="1086" loading="lazy" decoding="async" />
+        </picture>
         <figcaption>Servis a sezónna kontrola sekcií</figcaption>
       </figure>
     </div>
@@ -517,7 +573,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <footer class="footer">
   <div class="wrap footer__grid">
     <div class="footer__brand">
-      <img src="assets/egon-logo-clean.png" alt="EGON" class="footer__logo" />
+      <img src="assets/egon-logo-clean.png" alt="EGON" class="footer__logo" width="341" height="120" loading="lazy" decoding="async" />
       <p class="footer__tag">Expert na závlahové systémy. Návrh a realizácia automatickej závlahy pre záhrady, firemné areály a športové ihriská. Prešov a okolie.</p>
     </div>
     <nav class="footer__col" aria-label="Navigácia">
