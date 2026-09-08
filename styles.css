@@ -401,9 +401,12 @@ section { position: relative; }
 .footer__credit:hover { opacity: 1; transform: translateY(-2px); }
 .footer__credit:focus-visible { outline: 2px solid var(--grass); outline-offset: 4px; border-radius: 4px; }
 .footer__credit img { display: block; width: 24px; height: 24px; }
-@media (max-width: 600px) {
-  .footer__bottom { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; }
+/* na mobile a tablete ide kredit na vlastny riadok uplne na koniec
+   (880px = rovnaky zlom, pri ktorom sa uz zbaluje .footer__grid) */
+@media (max-width: 880px) {
+  .footer__bottom { flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px; }
   .footer__bottom > span { width: 100%; text-align: center; }
+  .footer__credit { order: 99; }
 }
 /* ---------- Scroll progress bar ---------- */
 .scrollbar { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 70; background: oklch(0.2 0.03 195 / 0.001); pointer-events: none; }

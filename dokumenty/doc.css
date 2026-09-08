@@ -49,6 +49,13 @@ a{color:var(--grass-deep);text-underline-offset:2px;}
 .doc__foot a{color:oklch(0.9 0.01 165 / 0.8);}
 
 /* kredit autora webu — ikona IT Dynamics na svetlom podklade */
+.doc__foot-right{display:flex;align-items:center;gap:14px;}
+/* na mobile ide kredit na vlastny riadok uplne na koniec */
+@media (max-width:880px){
+  .doc__foot-in{flex-direction:column;align-items:center;text-align:center;gap:14px;}
+  .doc__foot-right{flex-direction:column;gap:14px;}
+  .doc__credit{order:99;}
+}
 .doc__credit{display:inline-flex;align-items:center;vertical-align:middle;opacity:.65;
   transition:opacity .25s,transform .25s;}
 .doc__credit:hover{opacity:1;transform:translateY(-2px);}
